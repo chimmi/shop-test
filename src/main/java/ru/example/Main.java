@@ -1,6 +1,6 @@
 package ru.example;
 
-import ru.example.shop.Line;
+import ru.example.shop.CheckoutLine;
 import ru.example.shop.Shop;
 
 import java.util.Arrays;
@@ -10,14 +10,14 @@ import java.util.stream.Collectors;
 public class Main {
 
     public static void main(String[] args) {
-        List<Line> lines = Arrays.asList(
-                new Line("1", 10),
-                new Line("2", 13),
-                new Line("3", 15),
-                new Line("4", 17)
+        List<CheckoutLine> checkoutLines = Arrays.asList(
+                new CheckoutLine("1", 10),
+                new CheckoutLine("2", 13),
+                new CheckoutLine("3", 15),
+                new CheckoutLine("4", 17)
         );
 
-        Shop shop = new Shop(lines);
+        Shop shop = new Shop(checkoutLines);
 
         List<String> sampleInput = Arrays.asList("A", "A", "A", "A", "A");
         List<String> expectedOutput = Arrays.asList("4", "3", "2", "1", "4");

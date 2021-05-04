@@ -3,32 +3,32 @@ package ru.example.shop;
 /**
  * Not Thread safe
  */
-public class Line {
+public class CheckoutLine {
 
     private static final Integer DEFAULT_CAPACITY = 20;
 
     private Integer length;
     private final String id;
-    private final Double averageWaitTime;
+    private final Double serveTime;
     private final Integer capacity;
 
     /**
-     * @param id         - Line id
+     * @param id         - CheckoutLine id
      * @param throughput - People per hour
      * @param capacity   - Max people allowed in line
      */
-    public Line(String id, Integer throughput, Integer capacity) {
+    public CheckoutLine(String id, Integer throughput, Integer capacity) {
         this.length = 0;
         this.id = id;
-        this.averageWaitTime = 1.0 / throughput;
+        this.serveTime = 1.0 / throughput;
         this.capacity = capacity;
     }
 
     /**
-     * @param id         - Line id
+     * @param id         - CheckoutLine id
      * @param throughput - People per hour
      */
-    public Line(String id, Integer throughput) {
+    public CheckoutLine(String id, Integer throughput) {
         this(id, throughput, DEFAULT_CAPACITY);
     }
 
@@ -37,7 +37,11 @@ public class Line {
     }
 
     public void acceptPerson() {
-        this.length++;
+        if (canAcceptPerson()) {
+            this.length++;
+        } else {
+            throw new IllegalStateException("Cannot accept new person at this moment");
+        }
     }
 
     public void releasePerson() {
@@ -45,7 +49,7 @@ public class Line {
     }
 
     public Double getExpectedWaitTime() {
-        return averageWaitTime * (length + 1);
+        return serveTime * (length + 1);
     }
 
     public Integer getLength() {
@@ -60,8 +64,8 @@ public class Line {
         return id;
     }
 
-    public Double getAverageWaitTime() {
-        return averageWaitTime;
+    public Double getServeTime() {
+        return serveTime;
     }
 
     public Integer getCapacity() {

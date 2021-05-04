@@ -11,39 +11,39 @@ import java.util.stream.Collectors;
  */
 public class Shop {
 
-    private final List<Line> lines;
+    private final List<CheckoutLine> checkoutLines;
 
-    public Shop(List<Line> lines) {
-        Set<String> uniqueIds = lines.stream()
-                .map(Line::getId)
+    public Shop(List<CheckoutLine> checkoutLines) {
+        Set<String> uniqueIds = checkoutLines.stream()
+                .map(CheckoutLine::getId)
                 .collect(Collectors.toSet());
 
-        if (lines.size() != uniqueIds.size()) {
-            throw new IllegalArgumentException("Lines must have unique ids");
+        if (checkoutLines.size() != uniqueIds.size()) {
+            throw new IllegalArgumentException("Checkout lines must have unique ids");
         }
 
-        this.lines = Collections.unmodifiableList(lines);
+        this.checkoutLines = Collections.unmodifiableList(checkoutLines);
     }
 
     public String acceptPerson() {
-        Line quickestLine = lines.stream()
-                .filter(Line::canAcceptPerson)
-                .min(Comparator.comparing(Line::getExpectedWaitTime))
-                .orElseThrow(() -> new RuntimeException("Cannot accept new person at this moment, all lines are full"));
+        CheckoutLine quickestLine = checkoutLines.stream()
+                .filter(CheckoutLine::canAcceptPerson)
+                .min(Comparator.comparing(CheckoutLine::getExpectedWaitTime))
+                .orElseThrow(() -> new IllegalStateException("Cannot accept new person at this moment"));
         quickestLine.acceptPerson();
         return quickestLine.getId();
     }
 
     public void releasePerson(String lineId) {
-        lines.stream()
+        checkoutLines.stream()
                 .filter(line -> line.getId().equals(lineId))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException(String.format("Line with id: \"%s\" not found", lineId)))
                 .releasePerson();
     }
 
-    public List<Line> getLines() {
-        return lines;
+    public List<CheckoutLine> getCheckoutLines() {
+        return checkoutLines;
     }
 
 }
